@@ -185,7 +185,7 @@ export default function Home() {
     return (
       <div className="flex flex-1 flex-col justify-center items-center min-h-screen w-full h-full bg-white p-4">
         <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
-          Welcome to Your Education Assistant
+          Welcome to Your Food Recommender
         </h1>
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Sign in to continue</h2>
@@ -249,7 +249,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center min-h-screen max-w-1/2 h-full bg-white">
       <div className="bg-white shadow-sm mx-auto px-4 sm:px-6 lg:px-8 flex justify-center h-16 items-center">
-        <h1 className="text-xl font-bold text-gray-800">AI Assistant</h1>
+        <h1 className="text-xl font-bold text-gray-800">Food Recommender</h1>
         
         {/* User Info Table */}
         {userInfo && (
@@ -261,7 +261,7 @@ export default function Home() {
       
       <div className="bg-white shadow-sm mx-auto px-4 sm:px-6 lg:px-8 flex justify-center h-16 items-center">
         <h1 className="text-4xl font-bold mb-16 text-center text-gray-800">
-          Welcome to Your Education Assistant
+          Welcome !
         </h1>
         {!activeAssistant ? (
           <div className="w-full max-w-6xl mx-auto">
