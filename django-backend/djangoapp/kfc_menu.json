@@ -1,0 +1,44 @@
+{
+  "box_meals": [
+    {
+      "meal_id": "S7A001",
+      "name": "K-Cheese Cheezilla",
+      "price": "RM31.49"
+    },
+    {
+      "meal_id": "S7A002",
+      "name": "Zinger Double Down",
+      "price": "RM26.99"
+    },
+    {
+      "meal_id": "S7A003",
+      "name": "Signature Box Classic",
+      "price": "RM23.49"
+    },
+    {
+      "meal_id": "S7A004",
+      "name": "Cheezilla Box",
+      "price": "RM29.99"
+    },
+    {
+      "meal_id": "S7A005",
+      "name": "Colonel Classic Box",
+      "price": "RM20.49"
+    },
+    {
+      "meal_id": "S7A006",
+      "name": "Zinger Cheezy Box",
+      "price": "RM25.99"
+    },
+    {
+      "meal_id": "S7A007",
+      "name": "Twister Box",
+      "price": "RM23.49"
+    },  
+    {
+      "meal_id": "S7A008",
+      "name": "Snacker Box",
+      "price": "RM17.49"
+    }      
+  ]
+}

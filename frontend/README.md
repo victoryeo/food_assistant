@@ -1,0 +1,1 @@
+This is a nextjs frontend for food assistant.
