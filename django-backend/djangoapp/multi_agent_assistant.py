@@ -211,109 +211,55 @@ class EducationAgent(BaseAgent):
             user_id=user_id
         )
         self._load_menu_content()
-    
-    def _load_exam_data(self, file_path: str) -> List[Document]:
-        """Load and process data from exam JSON file"""
-        try:
-            print(f"Attempting to load exam data from: {file_path}")
-            with open(file_path, 'r', encoding='utf-8') as f:
-                try:
-                    content = f.read()
-                    # Remove JavaScript-style comments (// ...)
-                    content = re.sub(r'//.*?$', '', content, flags=re.MULTILINE)
-                    # Remove multi-line comments (/* ... */)
-                    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
-                    data = json.loads(content)
-                except json.JSONDecodeError as e:
-                    print(f"JSON decode error: {e}")
-                    raise
-                
-            documents = []
-            for student in data.get('students', []):
-                # Create a document for the student's overall information
-                student_doc = {
-                    'page_content': f"Student: {student.get('name')} (ID: {student.get('student_id')})\n                    Personality: {', '.join(student.get('initial_personality', []))}\n"
-                }
-                
-                # Add scores information
-                if 'math_scores' in student and student['math_scores']:
-                    scores = student['math_scores']
-                    avg_score = sum(s['score']/s['max_score'] for s in scores) / len(scores)
-                    topics = set(s['topic'] for s in scores)
-                    
-                    student_doc['page_content'] += f"\nMath Performance (Average: {avg_score:.1%})\n"
-                    student_doc['page_content'] += f"Topics covered: {', '.join(topics)}\n"
-                    
-                    # Add recent scores, handling potential None values in timestamps
-                    try:
-                        recent_scores = sorted(
-                            scores,
-                            key=lambda x: x.get('timestamp') or '1970-01-01T00:00:00Z',
-                            reverse=True
-                        )[:3]
-                        student_doc['page_content'] += "\nRecent scores:\n"
-                        for score in recent_scores:
-                            student_doc['page_content'] += f"- {score.get('topic', 'Unknown')}: {score.get('score', '?')}/{score.get('max_score', '?')} ({score.get('type', 'Exercise')})\n"
-                    except Exception as e:
-                        print(f"Warning: Error processing scores for student {student.get('name', 'Unknown')}: {e}")
-                        student_doc['page_content'] += "\n(Score information not available)\n"
-                
-                # Add metadata
-                student_doc['metadata'] = {
-                    'source': 'deepseek_data',
-                    'student_id': student.get('student_id'),
-                    'student_name': student.get('name'),
-                    'category': self.category,
-                    'user_id': self.user_id,
-                    'loaded_at': datetime.now().isoformat()
-                }
-
-                # disable print for now
-                #print(student_doc)
-                
-                documents.append(Document(**student_doc))
-                
-            print(f"✅ Loaded {len(documents)} student records from exam data")
-            return documents
-            
-        except Exception as e:
-            print(f"❌ Failed to load exam data: {e}")
-            return []
-    
+ 
     def _load_menu_content(self):
-        """Load educational datasets"""
-        print("Loading educational datasets...")
-        # Load from deepseek.json if available
-        examdata_path = os.path.join(os.path.dirname(__file__), 'kfc_menu.json')
-        if os.path.exists(examdata_path):
-            print("Found examdata data, loading...")
-            examdata_docs = self._load_exam_data(examdata_path)
-            if examdata_docs:
-                try:
-                    for doc in examdata_docs:
-                        # Ensure metadata exists
-                        if not hasattr(doc, 'metadata') or doc.metadata is None:
-                            doc.metadata = {}
-
-                        # Convert UUIDs to strings in metadata
-                        if hasattr(doc, 'metadata') and doc.metadata:
-                            clean_metadata = {}
-                            for k, v in doc.metadata.items():
-                                if isinstance(v, (uuid.UUID, ObjectId)):
-                                    clean_metadata[k] = str(v)
-                                elif isinstance(v, dict):
-                                    # Handle nested dictionaries
-                                    clean_metadata[k] = {}
-                                    for nk, nv in v.items():
-                                        if isinstance(nv, (uuid.UUID, ObjectId)):
-                                            clean_metadata[k][nk] = str(nv)
-                                        else:
-                                            clean_metadata[k][nk] = nv
-                            doc.metadata = clean_metadata
-                    self.knowledge_store.add_documents(examdata_docs)
-                    print(f"✅ Added {len(examdata_docs)} documents from exam data")
-                except Exception as e:
-                    print(f"❌ Failed to add menu data to knowledge store: {e}")
+        """Load KFC menu data"""
+        print("Loading KFC menu data...")
+        menu_path = os.path.join(os.path.dirname(__file__), 'kfc_menu.json')
+        if os.path.exists(menu_path):
+            print("Found KFC menu data, loading...")
+            try:
+                with open(menu_path, 'r', encoding='utf-8') as f:
+                    menu_data = json.load(f)
+                
+                # Process menu data into documents
+                menu_docs = []
+                for category, items in menu_data.items():
+                    for item in items:
+                        # Create a document for each menu item
+                        try:
+                            price = float(item.get('price', 0))
+                            price_str = f"${price:.2f}"
+                        except (TypeError, ValueError):
+                            price = 0
+                            price_str = "Price not available"
+                            
+                        content = f"{item.get('name', '')}: {item.get('description', '')} - {price_str}"
+                        doc = Document(
+                            page_content=content,
+                            metadata={
+                                'category': category,
+                                'name': item.get('name', ''),
+                                'price': price,
+                                'source': 'kfc_menu.json'
+                            }
+                        )
+                        menu_docs.append(doc)
+                
+                if menu_docs:
+                    # Add to vector store
+                    self.knowledge_store.add_documents(menu_docs)
+                    print(f"Loaded {len(menu_docs)} menu items from kfc_menu.json")
+                    return menu_docs
+                
+                return []
+                
+            except Exception as e:
+                print(f"❌ Failed to load KFC menu data: {e}")
+                return []
+        else:
+            print("❌ kfc_menu.json not found")
+            return []
     
     def process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
         """Process educational content requests"""
