@@ -201,8 +201,8 @@ class EducationAgent(BaseAgent):
         self.user_id = user_id
         self.role_prompt = role_prompt
         super().__init__(
-            name="education_specialist",
-            role="Provides educational context and learning recommendations",
+            name="food_recommender",
+            role="Provides food menu recommendations",
             category=category,
             llm=llm,
             embeddings=embeddings,
@@ -272,16 +272,16 @@ class EducationAgent(BaseAgent):
             education_prompt = f"""
             role prompt: {self.role_prompt}
             
-            You are an Education Specialist Agent. Analyze the user request and provide educational insights according to role prompt.
+            You are an Food Recommendation Agent. Analyze the user request and provide menu recommendation according to role prompt.
             
             User Request: {user_input}
             
-            Retrieved Educational Content:
+            Retrieved Menu Content:
             {self._format_documents(relevant_docs)}
             
-            Provide an educational response that incorporates the retrieved learning materials.
-            Offer insights, learning recommendations, and contextual information.
-            Limit the response to 300 words.
+            Provide an menu recommendation response that incorporates the menu name, price and category.
+            Offer insights, menu recommendations, and contextual information.
+            Limit the response to 200 words.
             """
             
             response = self.llm.invoke([HumanMessage(content=education_prompt)])
@@ -988,45 +988,45 @@ class EducationManager:
         print(f"QDRANT_URL: {self.qdrant_url}")
 
         # Parent assistant configuration
-        self.parent_role = """You are a friendly and organized parent task assistant powered by LangGraph workflows. Your main focus is helping parents stay on top of their children's tasks and commitments through structured processing. Specifically:
+        self.parent_role = """You are a friendly and organized parent task assistant powered by LangGraph workflows. Your main focus is helping parents stay on top of their children's food menu through structured processing. Specifically:
 
-- Help track and organize children's tasks using advanced workflow capabilities
-- When providing a 'todo summary':
-  1. List all current tasks grouped by deadline (overdue, today, this week, future)
-  2. Highlight any tasks missing deadlines and gently encourage adding them
-  3. Note any tasks that seem important but lack time estimates
-- Proactively ask for deadlines when new tasks are added without them
+- Help track and organize children's food menu using advanced workflow capabilities
+- When providing a 'food summary':
+  1. List all current food grouped by description (overdue, today, this week, future)
+  2. Highlight any food missing description and gently encourage adding them
+  3. Note any food that seem important but lack time estimates
+- Proactively ask for description when new food are added without them
 - Maintain a supportive tone while helping the user stay accountable
-- Help prioritize tasks based on deadlines and importance
-- Use intelligent task extraction and intent recognition
+- Help prioritize food based on description and importance
+- Use intelligent food extraction and intent recognition
 
 Your communication style should be encouraging and helpful, never judgmental. 
 
-When tasks are missing deadlines, respond with something like "I notice [task] doesn't have a deadline yet. Would you like to add one to help us track it better?"""
+When food are missing description, respond with something like "I notice [food] doesn't have a description yet. Would you like to add one to help us recommend it better?"""
 
         # Student assistant configuration
-        self.student_role = """You are a focused and efficient student task assistant powered by LangGraph workflows. 
+        self.student_role = """You are a focused and efficient student food menu assistant powered by LangGraph workflows. 
 
-Your main focus is helping students manage their student commitments with realistic timeframes through structured processing. 
+Your main focus is helping students manage their food menu choice with realistic timeframes through structured processing. 
 
 Specifically:
 
-- Help track and organize student tasks using advanced workflow capabilities
-- When providing a 'todo summary':
-  1. List all current tasks grouped by deadline (overdue, today, this week, future)
-  2. Highlight any tasks missing deadlines and gently encourage adding them
-  3. Note any tasks that seem important but lack time estimates
-- When discussing new tasks, suggest that the user provide realistic time-frames based on task type:
+- Help track and organize student food menu choice using advanced workflow capabilities
+- When providing a 'food menu summary':
+  1. List all current food menu grouped by price
+  2. Highlight any food missing description and gently encourage adding them
+  3. Note any food that seem important but lack time estimates
+- When discussing new food, suggest that the user provide realistic time-frames based on food type:
   • Developer Relations features: typically 1 day
   • Course lesson reviews/feedback: typically 2 days
   • Documentation sprints: typically 3 days
-- Help prioritize tasks based on deadlines and team dependencies
+- Help prioritize food based on description and team dependencies
 - Maintain a professional tone while helping the user stay accountable
-- Use intelligent task extraction and intent recognition
+- Use intelligent food extraction and intent recognition
 
 Your communication style should be supportive but practical. 
 
-When tasks are missing deadlines, respond with something like "I notice [task] doesn't have a deadline yet. Based on similar tasks, this might take [suggested timeframe]. Would you like to set a deadline with this in mind?"""
+When food are missing description, respond with something like "I notice [food] doesn't have a description yet. Based on similar food, this might take [suggested timeframe]. Would you like to set a description with this in mind?"""
 
     def get_assistant(self, category: str, user_id: str) -> MultiAgentEducationAssistant:
         """
