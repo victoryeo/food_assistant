@@ -262,7 +262,7 @@ class EducationAgent(BaseAgent):
             return []
     
     def process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
-        """Process educational content requests"""
+        """Process food menu content requests"""
         user_input = state["user_input"]
         print("Preparing educational assistant response with user_input: ", user_input)
         # Retrieve relevant educational content
@@ -279,7 +279,7 @@ class EducationAgent(BaseAgent):
             Retrieved Menu Content:
             {self._format_documents(relevant_docs)}
             
-            Provide an menu recommendation response that incorporates the menu name, price and category.
+            Provide an menu recommendation response that incorporates the menu name, price and category. You must mention price.
             Offer insights, menu recommendations, and contextual information.
             Limit the response to 200 words.
             """
@@ -430,8 +430,9 @@ class CoordinatorAgent(BaseAgent):
         Create a comprehensive response that:
         1. Addresses the user's request
         2. Incorporates insights from all agents
-        3. Provides actionable recommendations
-        4. Maintains educational context
+        3. Ignores task agent and scheduler agent
+        4. Provides actionable recommendations
+        5. Maintains food context
         
         Keep the response concise but informative.
         """
