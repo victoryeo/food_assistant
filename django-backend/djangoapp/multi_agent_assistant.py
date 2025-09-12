@@ -228,8 +228,8 @@ class EducationAgent(BaseAgent):
                     for item in items:
                         # Create a document for each menu item
                         try:
-                            price = float(item.get('price', 0))
-                            price_str = f"${price:.2f}"
+                            price = (item.get('price', ''))
+                            price_str = f"${price}"
                         except (TypeError, ValueError):
                             price = 0
                             price_str = "Price not available"
