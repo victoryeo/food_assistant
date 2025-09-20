@@ -17,8 +17,8 @@ from authlib.integrations.django_client import OAuth
 from django.urls import reverse
 from .mongodb_utils import get_user_by_email, create_user
 from .models import Task, User, Student, Parent, TaskStatusHistory
-#from .education_assistant import EducationManager
-from .multi_agent_assistant import EducationManager
+#from .food_assistant import FoodManager
+from .multi_agent_assistant import FoodManager
 from .serializers import (
     UserSerializer, StudentSerializer, ParentSerializer,
     TaskSerializer, TaskCreateSerializer, TaskUpdateSerializer,
@@ -384,7 +384,7 @@ class ParentTaskViewSet(TaskViewSet):
     def __init__(self, **kwargs):
         print(f"__init__ ParentTaskViewSet")
         super().__init__(**kwargs)
-        self.assistant_manager = EducationManager()
+        self.assistant_manager = FoodManager()
         self.parent_assistant = None
 
     @classmethod
@@ -575,7 +575,7 @@ class ParentTaskViewSet(TaskViewSet):
                 )
             
             # Delete the task
-            # Note: You'll need to implement delete_task in MultiAgentEducationAssistant
+            # Note: You'll need to implement delete_task in MultiAgentFoodAssistant
             success = parent_assistant.delete_task(pk)
             
             if not success:

@@ -165,7 +165,7 @@ class TaskManagerAgent(BaseAgent):
         }
 
     def _create_task(self, extracted_info: Dict[str, Any]):
-        """Create new tasks with educational context"""
+        """Create new tasks with food context"""
         created_tasks = []
         print(f"Creating tasks: {extracted_info}")
 
@@ -194,10 +194,10 @@ class TaskManagerAgent(BaseAgent):
     
         return created_tasks
 
-# Educational Content Agent
-class EducationAgent(BaseAgent):
+# Food Content Agent
+class FoodAgent(BaseAgent):
     def __init__(self, category: str, llm, embeddings, db_connection_string: str, collection_name: str, role_prompt: str, user_id: str):
-        print("Setting up EducationAgent")
+        print("Setting up FoodAgent")
         self.user_id = user_id
         self.role_prompt = role_prompt
         super().__init__(
@@ -264,12 +264,12 @@ class EducationAgent(BaseAgent):
     def process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
         """Process food menu content requests"""
         user_input = state["user_input"]
-        print("Preparing educational assistant response with user_input: ", user_input)
-        # Retrieve relevant educational content
+        print("Preparing food assistant response with user_input: ", user_input)
+        # Retrieve relevant food content
         try:
             relevant_docs = self.knowledge_store.similarity_search(user_input, k=3)
             
-            education_prompt = f"""
+            food_prompt = f"""
             role prompt: {self.role_prompt}
             
             You are an Food Recommendation Agent. Analyze the user request and provide menu recommendation according to role prompt.
@@ -284,10 +284,10 @@ class EducationAgent(BaseAgent):
             Limit the response to 200 words.
             """
             
-            response = self.llm.invoke([HumanMessage(content=education_prompt)])
+            response = self.llm.invoke([HumanMessage(content=food_prompt)])
             
             state["agent_outputs"][self.name] = {
-                "educational_context": response.content,
+                "food_context": response.content,
                 "retrieved_documents": len(relevant_docs),
                 "recommendations": self._extract_recommendations(response.content)
             }
@@ -295,10 +295,10 @@ class EducationAgent(BaseAgent):
             state["retrieved_content"].extend(relevant_docs)
             
         except Exception as e:
-            print(f"EducationAgent error: {e}")
+            print(f"FoodAgent error: {e}")
             state["agent_outputs"][self.name] = {
                 "error": str(e),
-                "educational_context": "Unable to provide educational context at this time."
+                "food_context": "Unable to provide food context at this time."
             }
         
         return state
@@ -463,16 +463,16 @@ class CoordinatorAgent(BaseAgent):
         if "task_manager" in agent_outputs:
             response_parts.append("Task information has been processed.")
         
-        if "education_specialist" in agent_outputs:
-            response_parts.append("Educational context has been considered.")
+        if "food_specialist" in agent_outputs:
+            response_parts.append("Food context has been considered.")
         
         if "scheduler" in agent_outputs:
             response_parts.append("Scheduling analysis has been completed.")
         
         return " ".join(response_parts) if response_parts else "Request processed successfully."
 
-# Multi-Agent Education Assistant
-class MultiAgentEducationAssistant:
+# Multi-Agent Food Assistant
+class MultiAgentFoodAssistant:
     def __init__(self, role_prompt: str, category: str, user_id: str):
         self.role_prompt = role_prompt
         self.category = category
@@ -499,7 +499,7 @@ class MultiAgentEducationAssistant:
         collection_base = f"{category}_{user_id}"
         self.agents = {
             "task_manager": TaskManagerAgent(self.category, self.llm, self.embeddings, self.db_connection_string, collection_base, self.user_id),
-            "education_specialist": EducationAgent(self.category, self.llm, self.embeddings, self.db_connection_string, collection_base, self.role_prompt, self.user_id),
+            "food_specialist": FoodAgent(self.category, self.llm, self.embeddings, self.db_connection_string, collection_base, self.role_prompt, self.user_id),
             "scheduler": SchedulerAgent(self.category, self.llm, self.embeddings, self.db_connection_string, collection_base, self.user_id),
             "coordinator": CoordinatorAgent(self.category, self.llm, self.embeddings, self.db_connection_string, collection_base, self.user_id)
         }
@@ -519,7 +519,7 @@ class MultiAgentEducationAssistant:
         workflow.add_node("analyze_intent", self._analyze_intent)
         workflow.add_node("route_to_agents", self._route_to_agents)
         workflow.add_node("task_manager_process", self._task_manager_process)
-        workflow.add_node("education_specialist_process", self._education_specialist_process)
+        workflow.add_node("food_specialist_process", self._food_specialist_process)
         workflow.add_node("scheduler_process", self._scheduler_process)
         workflow.add_node("coordinate_response", self._coordinate_response)
         workflow.add_node("finalize_tasks", self._finalize_tasks)
@@ -536,15 +536,15 @@ class MultiAgentEducationAssistant:
             self._decide_agent_routing,
             {
                 "task_focused": "task_manager_process",
-                "education_focused": "education_specialist_process",
+                "food_focused": "food_specialist_process",
                 "schedule_focused": "scheduler_process",
                 "comprehensive": "task_manager_process"  # Start with task manager for comprehensive requests
             }
         )
         
         # Agent processing chains
-        workflow.add_edge("task_manager_process", "education_specialist_process")
-        workflow.add_edge("education_specialist_process", "scheduler_process")
+        workflow.add_edge("task_manager_process", "food_specialist_process")
+        workflow.add_edge("food_specialist_process", "scheduler_process")
         workflow.add_edge("scheduler_process", "coordinate_response")
         workflow.add_edge("coordinate_response", "finalize_tasks")
         workflow.add_edge("finalize_tasks", END)
@@ -567,8 +567,8 @@ class MultiAgentEducationAssistant:
             intent = "summary"
         elif any(keyword in user_input for keyword in ["schedule", "deadline", "priority", "when"]):
             intent = "schedule"
-        elif any(keyword in user_input for keyword in ["learn", "study", "education", "course"]):
-            intent = "education"
+        elif any(keyword in user_input for keyword in ["eat", "food", "hungry"]):
+            intent = "food"
         else:
             intent = "query"
         
@@ -587,8 +587,8 @@ class MultiAgentEducationAssistant:
         # Determine routing decision
         if intent in ["schedule"] or any(word in user_input for word in ["deadline", "priority", "urgent"]):
             routing = "schedule_focused"
-        elif intent in ["education"] or any(word in user_input for word in ["learn", "study", "course"]):
-            routing = "education_focused"
+        elif intent in ["food"] or any(word in user_input for word in ["eat", "food", "hungry"]):
+            routing = "food_focused"
         elif intent in ["create", "update", "complete"]:
             routing = "task_focused"
         else:
@@ -607,11 +607,11 @@ class MultiAgentEducationAssistant:
         state["current_agent"] = "task_manager"
         return self.agents["task_manager"].process(state)
     
-    def _education_specialist_process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
-        """Process through Education Specialist Agent"""
-        print("Processing through Education Specialist Agent")
-        state["current_agent"] = "education_specialist"
-        return self.agents["education_specialist"].process(state)
+    def _food_specialist_process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
+        """Process through Food Specialist Agent"""
+        print("Processing through Food Specialist Agent")
+        state["current_agent"] = "food_specialist"
+        return self.agents["food_specialist"].process(state)
     
     def _scheduler_process(self, state: MultiAgentTaskState) -> MultiAgentTaskState:
         """Process through Scheduler Agent"""
@@ -646,10 +646,10 @@ class MultiAgentEducationAssistant:
                     'priority': task_info.get('priority', 'medium')
                 }
                 
-                # Add educational context from education agent
-                education_output = state["agent_outputs"].get("education_specialist", {})
-                if education_output.get("educational_context"):
-                    task['educational_context'] = education_output["educational_context"][:200]
+                # Add food context from food agent
+                food_output = state["agent_outputs"].get("food_specialist", {})
+                if food_output.get("food_context"):
+                    task['food_context'] = food_output["food_context"][:200]
                 
                 # Add scheduling suggestions from scheduler agent
                 scheduler_output = state["agent_outputs"].get("scheduler", {})
@@ -723,7 +723,7 @@ class MultiAgentEducationAssistant:
             "completed": len([t for t in self.tasks if t.get('completed', False)]),
             "pending": len([t for t in self.tasks if not t.get('completed', False)]),
             "high_priority": len([t for t in self.tasks if t.get('priority') == 'high']),
-            "with_educational_context": len([t for t in self.tasks if t.get('educational_context')])
+            "with_food_context": len([t for t in self.tasks if t.get('food_context')])
         }
         
         return summary
@@ -975,7 +975,7 @@ class MultiAgentEducationAssistant:
             traceback.print_exc()
             return False
 
-class EducationManager:
+class FoodManager:
     def __init__(self):
         # A nested dictionary to store assistants:
         # self.assistants = {
@@ -984,7 +984,7 @@ class EducationManager:
         #     'personal': TaskAssistant3_instance_for_personal
         #   },
         # }
-        self.assistants: Dict[str, Dict[str, MultiAgentEducationAssistant]] = {}
+        self.assistants: Dict[str, Dict[str, MultiAgentfoodAssistant]] = {}
         self.qdrant_url = os.getenv("QDRANT_URL")
         print(f"QDRANT_URL: {self.qdrant_url}")
 
@@ -1029,7 +1029,7 @@ Your communication style should be supportive but practical.
 
 When food are missing description, respond with something like "I notice [food] doesn't have a description yet. Based on similar food, this might take [suggested timeframe]. Would you like to set a description with this in mind?"""
 
-    def get_assistant(self, category: str, user_id: str) -> MultiAgentEducationAssistant:
+    def get_assistant(self, category: str, user_id: str) -> MultiAgentFoodAssistant:
         """
         Retrieves a TaskAssistant instance for a given user and category.
         If it doesn't exist, a new one is created.
@@ -1054,7 +1054,7 @@ When food are missing description, respond with something like "I notice [food] 
 
             try:
                 # Instantiate and store the new assistant, passing the user_id
-                self.assistants[user_id][category] = MultiAgentEducationAssistant(
+                self.assistants[user_id][category] = MultiAgentFoodAssistant(
                     role_prompt=role_prompt,
                     category=category,
                     user_id=user_id # Crucially, pass the unique user ID
@@ -1069,8 +1069,8 @@ When food are missing description, respond with something like "I notice [food] 
 # Test function
 async def test_multi_agent_system():
     """Test the multi-agent system"""
-    education_manager = EducationManager()
-    assistant = education_manager.get_assistant('parent', 'user123')
+    food_manager = FoodManager()
+    assistant = food_manager.get_assistant('parent', 'user123')
     if assistant:
         response, tasks = await assistant.process_message(
             "I need to create a study plan for learning Python programming with deadlines"
