@@ -4,49 +4,115 @@
       "meal_id": "S7A001",
       "name": "K-Cheese Cheezilla",
       "price": "RM31.49",
-      "description": "burger, potato, cheese, coke"
+      "description": "burger, potato, cheese, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/k/-/k-cheese_cheezila_box_meal.png?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=png"
     },
     {
       "meal_id": "S7A002",
       "name": "Zinger Double Down",
       "price": "RM26.99",
-      "description": "burger, potato, chicken, coke"
+      "description": "burger, potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/p/m/pm-zinger-double-down-box-meal.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },
     {
       "meal_id": "S7A003",
       "name": "Signature Box Classic",
       "price": "RM23.49",
-      "description": "burger, potato, chicken, coke"
+      "description": "burger, potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/s/i/signature-box-classic-whipped-potato_2.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },
     {
       "meal_id": "S7A004",
       "name": "Cheezilla Box",
       "price": "RM29.99",
-      "description": "burger, potato, cheese, coke, chicken"
+      "description": "burger, potato, cheese, coke, chicken",
+      "url": "https://www.kfc.com.my/media/catalog/product/c/h/cheezilla-box-whipped-potato_3.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },
     {
       "meal_id": "S7A005",
       "name": "Colonel Classic Box",
       "price": "RM20.49",
-      "description": "burger, potato, chicken, coke"
+      "description": "burger, potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/c/o/colonel-classic-box-whipped-potato_2.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },
     {
       "meal_id": "S7A006",
       "name": "Zinger Cheezy Box",
       "price": "RM25.99",
-      "description": "burger, potato, chicken, coke"
+      "description": "burger, potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/z/i/zinger-cheezy-box-whipped-potato.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },
     {
       "meal_id": "S7A007",
       "name": "Twister Box",
       "price": "RM23.49",
-      "description": "Wrap, potato, chicken, coke"
+      "description": "Wrap, potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/t/w/twister-box-whipped-potato_2.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     },  
     {
       "meal_id": "S7A008",
       "name": "Snacker Box",
       "price": "RM17.49",
-      "description": "potato, chicken, coke"
+      "description": "potato, chicken, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/s/n/snacker-box-whipped-potato_2.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
     }      
+  ],
+  "Family Buckets": [
+    {
+      "meal_id": "S8A001",
+      "name": "6-pc Bucket Bersama",
+      "price": "RM53.49",
+      "description": "chicken, potato, coleslaw, coke, cheese",
+      "url": "https://www.kfc.com.my/media/catalog/product/6/p/6pcs_bucket_2.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A002",
+      "name": "10-pc Bucket Bersama",
+      "price": "RM79.99",
+      "description": "chicken, potato, coleslaw, coke, cheese",
+      "url": "https://www.kfc.com.my/media/catalog/product/1/0/10_pcs_bucket_1_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A003",
+      "name": "5-pc Combo",
+      "price": "RM44.49",
+      "description": "chicken, potato, coleslaw, coke",
+      "url": "https://www.kfc.com.my/media/catalog/product/5/-/5-pc-chicken-combo_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A004",
+      "name": "9-pc Bucket Bersama",
+      "price": "RM53.49",
+      "description": "chicken, potato, coleslaw, coke, cheese",
+      "url": "https://www.kfc.com.my/media/catalog/product/9/-/9-pc-chicken-combo_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A005",
+      "name": "15-pc Bucket Bersama",
+      "price": "RM102.99",
+      "description": "chicken, potato, coleslaw, coke, cheese",
+      "url": "https://www.kfc.com.my/media/catalog/product/1/5/15-pc-chicken-combo_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A006",
+      "name": "Variety Box A",
+      "price": "RM57.99",
+      "description": "chicken, potato, coleslaw, coke, chilli",
+      "url": "https://www.kfc.com.my/media/catalog/product/v/a/variety-box-a_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A007",
+      "name": "Variety Box B",
+      "price": "RM84.99",
+      "description": "chicken, potato, coleslaw, coke, chilli",
+      "url": "https://www.kfc.com.my/media/catalog/product/v/a/variety-box-b_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    },
+    {
+      "meal_id": "S8A008",
+      "name": "Variety Box C",
+      "price": "RM95.99",
+      "description": "chicken, potato, coleslaw, coke, chilli, burger",
+      "url": "https://www.kfc.com.my/media/catalog/product/v/a/variety-box-c_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg"
+    }
   ]
 }
