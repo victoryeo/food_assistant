@@ -279,8 +279,8 @@ class FoodAgent(BaseAgent):
             Retrieved Menu Content:
             {self._format_documents(relevant_docs)}
             
-            Provide an menu recommendation response that incorporates the menu name, price and category. You must mention price.
-            Offer insights, menu recommendations, and contextual information.
+            Provide an menu recommendation response that incorporates the menu name, price, url and category. You must mention price without the $ sign.
+            Don't offer insights, menu recommendations, and contextual information.
             Limit the response to 200 words.
             """
             
@@ -345,18 +345,18 @@ class SchedulerAgent(BaseAgent):
         existing_tasks = state.get("tasks", [])
         
         schedule_prompt = f"""
-        You are a Scheduler Agent. Analyze the current tasks and user request for optimal scheduling.
+        You are a Scheduler Agent. Don't analyze the current tasks and user request for optimal scheduling.
         
         User Request: {user_input}
         Existing Tasks: {len(existing_tasks)}
         
-        Provide scheduling recommendations including:
+        Don't provide scheduling recommendations including:
         - Optimal deadlines
         - Priority assignments
         - Time management suggestions
         - Conflict identification
         
-        Consider work-life balance and realistic time constraints.
+        Don't consider work-life balance and realistic time constraints.
         """
         
         try:
@@ -429,10 +429,10 @@ class CoordinatorAgent(BaseAgent):
         
         Create a comprehensive response that:
         1. Addresses the user's request
-        2. Incorporates insights from all agents
+        2. Incorporates insights from food agents
         3. Ignores task agent and scheduler agent
         4. Provides actionable recommendations
-        5. Maintains food context
+        5. Add full url  from kfc_menu.json, example: https://www.kfc.com.my/media/catalog/product/v/a/variety-box-b_1.jpg?quality=80&bg-color=255%2C255%2C255&fit=cover&height=3200&width=2560&auto=webp&format=pjpg
         
         Keep the response concise but informative.
         """
