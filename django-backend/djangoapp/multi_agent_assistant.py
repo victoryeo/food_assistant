@@ -920,7 +920,15 @@ class MultiAgentFoodAssistant:
 
     def update_menu(self) -> bool:
         print("update_menu called")
-        return True
+        try:
+            # get food agent
+            #self.agents['food_specialist']._load_menu_content()
+            food_agent = self.agents.get('food_specialist')
+            food_agent._load_menu_content()
+            return True
+        except Exception as e:
+            print(f"ERROR: Error updating menu: {e}")
+            return False
         
     def delete_task(self, task_id: str) -> bool:
         """
