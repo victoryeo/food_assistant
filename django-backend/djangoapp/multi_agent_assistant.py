@@ -18,6 +18,7 @@ import json
 import uuid
 import traceback
 from bson import ObjectId
+from functools import lru_cache
 
 load_dotenv()
 
@@ -473,6 +474,12 @@ class CoordinatorAgent(BaseAgent):
 
 # Multi-Agent Food Assistant
 class MultiAgentFoodAssistant:
+    @staticmethod
+    @lru_cache(maxsize=1)
+    def _setup_embeddings():
+        print("Loading embeddings model (this happens only once)")
+        return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
     def __init__(self, role_prompt: str, category: str, user_id: str):
         self.role_prompt = role_prompt
         self.category = category
@@ -490,9 +497,8 @@ class MultiAgentFoodAssistant:
         else:
             raise ValueError("GROQ_API_KEY is not set")
         
-        # Setup embeddings
-        print("Setting up embeddings")
-        self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        # Get or create static embeddings
+        self.embeddings = self._setup_embeddings()
         
         # Initialize agents
         print("Setting up agents")
