@@ -47,6 +47,12 @@ api_patterns = [
     path('parent/update_menu',  # Without trailing slash
          views.ParentTaskViewSet.as_view({'put': 'update_menu'}), 
          name='parent-task-update-menu-noslash'),
+    path('parent/home/',  # With trailing slash
+         views.ParentTaskViewSet.as_view({'get': 'home'}), 
+         name='parent-task-home'),
+    path('parent/home',  # Without trailing slash
+         views.ParentTaskViewSet.as_view({'get': 'home'}), 
+         name='parent-task-home-noslash'),
 
     # Include router URLs
     path('', include(router.urls)),

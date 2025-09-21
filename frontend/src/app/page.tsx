@@ -7,7 +7,7 @@ import UserProfileTable from './components/UserProfileTable';
 import StudentAssistant from './components/StudentAssistant';
 import { useSession, signOut } from 'next-auth/react';
 import { useAuth } from './contexts/AuthContext';
-import { updateMenu } from '../services/api/assistantApi';
+import { updateMenu, home } from '../services/api/assistantApi';
 
 type AssistantType = 'student' | 'parent' | null;
 
@@ -33,6 +33,15 @@ export default function Home() {
     setIsLoading
   } = useAuth();
   
+  // Home
+  useEffect(() => {
+    const fetchAssistantHome = async () => {
+      console.log('Home useEffect');
+      await home();
+    };
+    fetchAssistantHome();
+  }, []); 
+
   // Debug userInfo changes
   useEffect(() => {
     console.log('userInfo in page component:', userInfo);

@@ -560,6 +560,20 @@ class ParentTaskViewSet(TaskViewSet):
             "tasks": queryset,
         }, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['get'], url_path='home')
+    def home(self, request, pk=None):
+        try:
+            self.get_parent_assistant()
+            return Response({"message": "Hello Home!"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {
+                    "error": "Parent assistant not available", 
+                    "details": str(e)
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+
     @action(detail=True, methods=['put', 'delete'], url_path='delete')
     def update_menu(self, request, pk=None):
         """

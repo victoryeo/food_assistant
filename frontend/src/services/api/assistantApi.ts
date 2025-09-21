@@ -67,6 +67,18 @@ export const completeTask = async (assistantType: 'student' | 'parent', taskId: 
   return response.data?.task;
 };
 
+export const home = async (): Promise<{ success: boolean }> => {
+  const endpoint = `/parent/home/`;
+  
+  const response = await apiRequest<{ success: boolean }>(endpoint, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+    },
+  });
+  console.log('home response', response)
+  return { success: true };
+}
 export const updateMenu = async (): Promise<{ success: boolean }> => {
   const endpoint = `/parent/update_menu/`;
   
