@@ -40,7 +40,14 @@ api_patterns = [
     path('parent/tasks/<uuid:pk>/delete',  # Without trailing slash
          views.ParentTaskViewSet.as_view({'put': 'delete_task', 'delete': 'delete_task'}), 
          name='parent-task-delete-noslash'),
-    
+    # update menu
+    path('parent/update_menu/',  # With trailing slash
+         views.ParentTaskViewSet.as_view({'put': 'update_menu'}), 
+         name='parent-task-update-menu'),
+    path('parent/update_menu',  # Without trailing slash
+         views.ParentTaskViewSet.as_view({'put': 'update_menu'}), 
+         name='parent-task-update-menu-noslash'),
+
     # Include router URLs
     path('', include(router.urls)),
 

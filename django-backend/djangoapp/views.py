@@ -561,6 +561,37 @@ class ParentTaskViewSet(TaskViewSet):
         }, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['put', 'delete'], url_path='delete')
+    def update_menu(self, request, pk=None):
+        """
+        Update the menu.
+        URL: PUT /parent/update_menu/
+        """
+        print(f"update_menu called for")
+        try:
+            parent_assistant = self.get_parent_assistant()
+            if not parent_assistant:
+                return Response(
+                    {"error": "Parent assistant not available"}, 
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE
+                )
+            
+            # Update the menu
+            # Note: implement update_menu in MultiAgentFoodAssistant
+            parent_assistant.update_menu()
+            return Response({"message": "Menu updated successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error in update_menu method: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            return Response(
+                {
+                    "error": "Failed to update menu", 
+                    "details": str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @action(detail=True, methods=['put', 'delete'], url_path='delete')
     def delete_task(self, request, pk=None):
         """
         Delete a specific task.

@@ -7,6 +7,7 @@ import UserProfileTable from './components/UserProfileTable';
 import StudentAssistant from './components/StudentAssistant';
 import { useSession, signOut } from 'next-auth/react';
 import { useAuth } from './contexts/AuthContext';
+import { updateMenu } from '../services/api/assistantApi';
 
 type AssistantType = 'student' | 'parent' | null;
 
@@ -172,6 +173,12 @@ export default function Home() {
     setError('');
   };
 
+  const handleUpdateMenu = async () => {
+    console.log('Update menu');
+    const response = await updateMenu();
+    console.log("response", response)
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 flex-col justify-center items-center min-h-screen w-full h-full bg-white">
@@ -286,6 +293,14 @@ export default function Home() {
                         </button>
                       </td>
                     ))}
+                  </tr>
+                  <tr>
+                    <td>Update Menu On-demand</td>
+                    <td>
+                      <button onClick={() => handleUpdateMenu()}>
+                        Update Menu
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>

@@ -918,6 +918,10 @@ class MultiAgentFoodAssistant:
             'completed_at': datetime.now().isoformat()
         })
 
+    def update_menu(self) -> bool:
+        print("update_menu called")
+        return True
+        
     def delete_task(self, task_id: str) -> bool:
         """
         Delete a task from the vector store.

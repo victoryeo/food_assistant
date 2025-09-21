@@ -67,6 +67,19 @@ export const completeTask = async (assistantType: 'student' | 'parent', taskId: 
   return response.data?.task;
 };
 
+export const updateMenu = async (): Promise<{ success: boolean }> => {
+  const endpoint = `/parent/update_menu/`;
+  
+  const response = await apiRequest<{ success: boolean }>(endpoint, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+    },
+  });
+  console.log('updateMenu response', response)
+  return { success: true };
+}
+
 export const deleteTask = async (assistantType: 'student' | 'parent', taskId: string): Promise<{ success: boolean; message: string }> => {
   const endpoint = `/${assistantType}/tasks/${taskId}/delete`;
   
