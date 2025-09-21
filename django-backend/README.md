@@ -110,3 +110,6 @@ For production deployment, make sure to:
 ## License
 
 [Your License Here]
+
+## Test URL
+curl http://localhost:8000/auth/google/callback/test -X GET 
