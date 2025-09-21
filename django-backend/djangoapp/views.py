@@ -412,6 +412,7 @@ class ParentTaskViewSet(TaskViewSet):
         if not self.parent_assistant and hasattr(self, 'request') and hasattr(self.request, 'user'):
             self.parent_assistant = self.assistant_manager.get_assistant('parent', user_id=self.request.user.id)
         return self.parent_assistant
+
     def get_parent_assistant(self):
         print(f"self.parent_assistant: {self.parent_assistant} {self.request.user.id}")
         if not hasattr(self, 'request') or not hasattr(self.request, 'user'):
