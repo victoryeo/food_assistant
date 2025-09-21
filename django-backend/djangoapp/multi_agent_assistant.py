@@ -248,7 +248,16 @@ class FoodAgent(BaseAgent):
                         menu_docs.append(doc)
                 
                 if menu_docs:
-                    # Add to vector store
+                    # Delete all documents in the collection(not work)
+                    self.knowledge_store.delete([])
+                    # Delete all documents in the collection(work)
+                    conn = psycopg2.connect(self.db_connection_string)
+                    cur = conn.cursor()
+                    cur.execute(f"TRUNCATE TABLE langchain_pg_embedding RESTART IDENTITY")
+                    conn.commit()
+                    conn.close()
+                    
+                    # Add the new documents
                     self.knowledge_store.add_documents(menu_docs)
                     print(f"Loaded {len(menu_docs)} menu items from kfc_menu.json")
                     return menu_docs
