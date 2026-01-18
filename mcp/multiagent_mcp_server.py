@@ -1,7 +1,7 @@
 """
-MCP Server for Multi-Agent Education Assistant
+MCP Server for Multi-Agent Food Assistant
 
-This server exposes the MultiAgentEducationAssistant capabilities through the MCP protocol,
+This server exposes the MultiAgentFoodAssistant capabilities through the MCP protocol,
 allowing other applications to interact with the multi-agent system.
 """
 
@@ -37,18 +37,18 @@ sys.path.append(django_backend_path)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Import existing MultiAgentEducationAssistant
-MultiAgentEducationAssistant = None
+# Import existing MultiAgentFoodAssistant
+MultiAgentFoodAssistant = None
 try:
-    from multi_agent_assistant import MultiAgentEducationAssistant
-    logger.info("Successfully imported MultiAgentEducationAssistant from multi_agent_assistant")
+    from multi_agent_assistant import MultiAgentFoodAssistant
+    logger.info("Successfully imported MultiAgentFoodAssistant from multi_agent_assistant")
 except Exception as e:
-    logger.warning(f"Could not import MultiAgentEducationAssistant: {str(e)}.")
-    MultiAgentEducationAssistant = None
+    logger.warning(f"Could not import MultiAgentFoodAssistant: {str(e)}.")
+    MultiAgentFoodAssistant = None
 # Logger already configured at the top
 
 class MultiAgentMCPServer:
-    """MCP Server wrapper for MultiAgentEducationAssistant"""
+    """MCP Server wrapper for MultiAgentFoodAssistant"""
     
     def __init__(self):
         logger.info("Initializing MultiAgentMCPServer...")
@@ -68,20 +68,20 @@ class MultiAgentMCPServer:
         if agent_key not in self.agents:
             logger.info(f"🆕 Creating new agent for user {user_id}, category {category}")
             try:
-                logger.info("🔍 Checking MultiAgentEducationAssistant class...")
-                if MultiAgentEducationAssistant is not None:
-                    logger.info("✅ Using real MultiAgentEducationAssistant implementation")
+                logger.info("🔍 Checking MultiAgentFoodAssistant class...")
+                if MultiAgentFoodAssistant is not None:
+                    logger.info("✅ Using real MultiAgentFoodAssistant implementation")
                     try:
                         # Use real implementation
-                        logger.info("🛠️  Creating MultiAgentEducationAssistant instance...")
+                        logger.info("🛠️  Creating MultiAgentFoodAssistant instance...")
                         try:
-                            logger.info("🔄 Attempting to create MultiAgentEducationAssistant instance...")
-                            agent = MultiAgentEducationAssistant(
+                            logger.info("🔄 Attempting to create MultiAgentFoodAssistant instance...")
+                            agent = MultiAgentFoodAssistant(
                                 user_id=user_id,
                                 category=category,
-                                role_prompt=role_prompt or f"You are an educational assistant specializing in {category}."
+                                role_prompt=role_prompt or f"You are an food assistant specializing in {category}."
                             )
-                            logger.info("✅ Successfully created MultiAgentEducationAssistant instance")
+                            logger.info("✅ Successfully created MultiAgentFoodAssistant instance")
                         except TypeError as e:
                             logger.error(f"❌ TypeError creating agent: {str(e)}")
                             logger.error("This might be due to incorrect parameters. Available parameters: user_id, category, role_prompt")
@@ -124,7 +124,7 @@ class MultiAgentMCPServer:
 
 # Create server instance
 logger.info("Creating server instance...")
-server = Server("multi-agent-education-assistant")
+server = Server("multi-agent-food-assistant")
 
 # Initialize the multi-agent server
 mcp_server = MultiAgentMCPServer()
@@ -135,7 +135,7 @@ async def list_tools() -> List[Tool]:
     return [
         Tool(
             name="process_message",
-            description="Process a message through the multi-agent education system",
+            description="Process a message through the multi-agent food system",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -248,7 +248,7 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> CallToolResult:
                 "content": user_input
             })
             
-            if agent_data["instance"] and MultiAgentEducationAssistant:
+            if agent_data["instance"] and MultiAgentFoodAssistant:
                 # Use real agent processing
                 try:
                     response, created_tasks = await agent_data["instance"].process_message(user_input)
@@ -590,7 +590,7 @@ async def read_resource(uri: AnyUrl) -> str | bytes:
             capabilities = {
                 "supported_intents": [
                     "create", "update", "complete", "summary",
-                    "schedule", "education", "query", "question"
+                    "schedule", "food", "query", "question"
                 ],
                 "version": "1.0",
             }
@@ -655,17 +655,17 @@ async def read_resource(uri: AnyUrl) -> str | bytes:
 
 async def main():
     """Main entry point for the MCP server"""
-    logger.info("Starting Multi-Agent Education Assistant MCP Server...")
+    logger.info("Starting Multi-Agent Food Assistant MCP Server...")
     
     try:
         # Create initialization options with required fields
         init_options = InitializationOptions(
-            server_name="multi-agent-education-assistant",
+            server_name="multi-agent-food-assistant",
             server_version="1.0.0",
             capabilities={
                 "supported_intents": [
                     "create", "update", "complete", "summary",
-                    "schedule", "education", "query", "question"
+                    "schedule", "food", "query", "question"
                 ],
                 "version": "1.0",
             }
