@@ -37,82 +37,48 @@ class UserRegistrationView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             print("UserRegistrationView post")
-            data = json.loads(request.body)
-            email = data.get('email')
-            password = data.get('password')
-            name = data.get('name', '')
-            
-            if not email or not password:
-                return Response(
-                    {'error': 'Email and password are required'}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            
-            import asyncio
-            # Create a new event loop for this thread
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
+            # Django already parses JSON into request.data; no need for json.loads(request.body)
+            email = request.data.get('email')
+            password = request.data.get('password')
+            name = request.data.get('name', '')
 
-            # Check if user exists in MongoDB
-            print("Check if user exists in MongoDB")
-            try:
-                # Run the async function and get the result
-                existing_user = loop.run_until_complete(
-                    get_user_by_email(email)
-                )
-                if existing_user:
-                    return Response(
-                        {'error': 'User with this email already exists'},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-                # Create new user in MongoDB
-                user_data = {
-                    'email': email,
-                    'password': password,
-                    'name': name,
-                    'disabled': False
-                }
-                created_user = loop.run_until_complete(
-                    create_user(user_data)
-                )
-                if not created_user:
-                    return Response(
-                        {'error': 'Failed to create user'},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                    )
-                # Return token pair on successful registration
-                tokens = get_tokens_for_user(created_user)
-                return Response({
-                    'message': 'User registered successfully',
-                    'user': {
-                        'id': created_user['id'],
-                        'email': created_user['email'],
-                        'name': created_user.get('name', '')
-                    },
-                    **tokens
-                }, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(f"Error checking user registration: {e}")
-                return Response(
-                    {'error': 'Failed to check user registration'},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-            finally:
-                # Clean up the event loop
-                try:
-                    loop.close()
-                except Exception as e:
-                    print(f"Error closing event loop: {str(e)}")
-        except json.JSONDecodeError:
-            return Response(
-                {'error': 'Invalid JSON'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            if not email or not password:
+                return Response({'error': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if user exists using async_to_sync helper
+            # This safely runs your Motor async function in the current thread
+            existing_user = async_to_sync(get_user_by_email)(email)
+            
+            if existing_user:
+                return Response({'error': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Create new user in MongoDB
+            user_data = {
+                'email': email,
+                'password': password,  # Ensure you hash this before saving!
+                'name': name,
+                'disabled': False
+            }
+            
+            created_user = async_to_sync(create_user)(user_data)
+            
+            if not created_user:
+                return Response({'error': 'Failed to create user'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            tokens = get_tokens_for_user(created_user)
+            return Response({
+                'message': 'User registered successfully',
+                'user': {
+                    'id': created_user['id'],
+                    'email': created_user['email'],
+                    'name': created_user.get('name', '')
+                },
+                **tokens
+            }, status=status.HTTP_201_CREATED)
+
         except Exception as e:
-            return Response(
-                {'error': str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            print(f"Error during registration: {str(e)}")
+            return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # Google OAuth2 config
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
